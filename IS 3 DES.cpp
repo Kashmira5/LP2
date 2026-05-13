@@ -1,0 +1,68 @@
+//Simplified using XOR logic
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    string text, key, encrypt = "", decrypt = "";
+
+    cout << "Enter Plain Text: ";
+    cin >> text;
+
+    cout << "Enter Key: ";
+    cin >> key;
+
+    // Encryption
+    for(int i = 0; i < text.length(); i++)
+    {
+        encrypt = encrypt + char(text[i] ^ key[i % key.length()]);
+    }
+
+    cout << "Encrypted Text: " << encrypt << endl;
+
+    // Decryption
+    for(int i = 0; i < encrypt.length(); i++)
+    {
+        decrypt = decrypt + char(encrypt[i] ^ key[i % key.length()]);
+    }
+
+    cout << "Decrypted Text: " << decrypt << endl;
+
+    return 0;
+}
+
+//OG
+#include <iostream>
+#include <cstring>
+#include <openssl/des.h>
+using namespace std;
+
+int main() {
+    DES_cblock key = "mykey12";  // 8-byte key
+    DES_key_schedule schedule;
+
+    // Set key
+    DES_set_key_unchecked(&key, &schedule);
+
+    char plainText[] = "HelloDES";
+    char encrypted[9], decrypted[9];
+
+    // Encrypt
+    DES_ecb_encrypt((DES_cblock*)plainText, (DES_cblock*)encrypted, &schedule, DES_ENCRYPT);
+
+
+    // Decrypt
+    DES_ecb_encrypt((DES_cblock*)encrypted, (DES_cblock*)decrypted, &schedule, DES_DECRYPT);
+
+    cout << "Original: " << plainText << endl;
+
+    cout << "Encrypted: ";
+    for (int i = 0; i < 8; i++)
+        printf("%02X ", (unsigned char)encrypted[i]);
+
+    cout << endl;
+
+    cout << "Decrypted: " << decrypted << endl;
+
+    return 0;
+}
